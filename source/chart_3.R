@@ -9,6 +9,8 @@ library(dplyr)
 library(tidyr)
 library(ggplot2)
 library(leaflet)
+library(tidyverse)
+library(maps)
 
 max_jail_adm <- incarceration %>% #Which county has the highest total jail admission
   filter(year == 2018, na.rm = TRUE) %>% 
@@ -21,6 +23,20 @@ min_jail_adm <- incarceration %>% #Which county has the lowest total jail admiss
   filter(total_jail_adm == min(total_jail_adm, na.rm = TRUE)) %>% 
   pull(county_name)
 View(min_jail_adm)
+
+usa <- readRDS("county_map_fips.rds") %>%
+  left_join(incarceration, by = "fips") %>% 
+  na.omit()
+#View(usa)
+
+hi <- usa %>% 
+  ggplot(mapping = aes(x = long, y = lat, group = group)) +
+  geom_polygon(aes(fill = total_jail_adm)) + 
+  coord_quickmap() + 
+  labs(title = "Jail Admissions in the United States by County")
+hi
+
+
 
 abb2name <- function(abb) {
   str_to_lower(state.name[grep(abb, state.abb)])
@@ -37,13 +53,14 @@ map <- map_data("county") %>%
   left_join(recent)
 View(map)
 
-map <- leaflet(data = incarceration) %>%
+twoo <- leaflet(data = map) %>%
   addTiles() %>% 
   addMarkers(
     lat = ~lat,
     lng = ~long,
     label = ~paste("Total Jail Admissions")
   )
+twoo
   
   addProviderTiles("Stamen.TonerLite") %>% # add Stamen Map Tiles
   addCircleMarkers( # add markers for each shooting
