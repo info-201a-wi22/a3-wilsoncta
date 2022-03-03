@@ -11,6 +11,8 @@ library(ggplot2)
 library(leaflet)
 library(tidyverse)
 library(maps)
+library(usmap)
+library(mapproj)
 
 max_jail_adm <- incarceration %>% #Which county has the highest total jail admission
   filter(year == 2018, na.rm = TRUE) %>% 
@@ -24,58 +26,35 @@ min_jail_adm <- incarceration %>% #Which county has the lowest total jail admiss
   pull(county_name)
 View(min_jail_adm)
 
-usa <- readRDS("county_map_fips.rds") %>%
-  left_join(incarceration, by = "fips") %>% 
-  na.omit()
-#View(usa)
+blank_theme <- theme_bw() +
+  theme ( 
+    axis.line = element_blank(),
+    axis.text = element_blank(),
+    axis.ticks = element_blank(),
+    axis.title = element_blank(),
+    plot.background = element_blank(),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank (),
+    panel.border = element_blank())
 
-hi <- usa %>% 
-  ggplot(mapping = aes(x = long, y = lat, group = group)) +
-  geom_polygon(aes(fill = total_jail_adm)) + 
-  coord_quickmap() + 
-  labs(title = "Jail Admissions in the United States by County")
-hi
+jail_adm <- incarceration %>%
+  select(year, fips, state, county_name, total_jail_adm) %>%
+  filter(year == 2018)
 
+county <- map_data("county") %>%
+  unite(polyname, region, subregion, sep = ",") %>%
+  left_join(county.fips, by = "polyname")
 
-
-abb2name <- function(abb) {
-  str_to_lower(state.name[grep(abb, state.abb)])
-}
-
-recent <- incarceration %>% 
-  select(year, fips, state, county_name, yfips, total_jail_adm) %>% 
-  filter(year == 2018) %>% 
-  mutate(region = as.character(sapply(state, abb2name)),
-         subregion = str_to_lower(str_replace(county_name, " County", "")))
-View(recent)
-
-map <- map_data("county") %>% 
-  left_join(recent)
+map <- county %>%
+  left_join(jail_adm, by = "fips")
 View(map)
 
-twoo <- leaflet(data = map) %>%
-  addTiles() %>% 
-  addMarkers(
-    lat = ~lat,
-    lng = ~long,
-    label = ~paste("Total Jail Admissions")
-  )
-twoo
-  
-  addProviderTiles("Stamen.TonerLite") %>% # add Stamen Map Tiles
-  addCircleMarkers( # add markers for each shooting
-    lat = ~lat,
-    lng = ~long,
-    label = ~paste0(name, ", ", age), # add a hover label: victim's name and age
-    color = ~palette_fn(shootings[["race"]]), # color points by race
-    fillOpacity = .7,
-    radius = 4,
-    stroke = FALSE
-  ) %>%
-  addLegend( # include a legend on the plot
-    position = "bottomright",
-    title = "race",
-    pal = palette_fn, # the palette to label
-    values = shootings[["race"]], # again, using double-bracket notation
-    opacity = 1 # legend is opaque
-  )
+test <- map %>% 
+  ggplot(mapping = aes(x = long, y = lat, group = group)) +
+  geom_polygon(aes(fill = map$total_jail_adm)) + 
+  coord_quickmap() + 
+  scale_fill_continuous(limits= c(0, max(map$total_jail_adm)))+
+  blank_theme +
+  labs(title = "Jail Admissions in the United States by County in 2018", fill = "total_jail_pop",
+       total_jail_adm = "Total Jail Population") #How to change legend title
+test
