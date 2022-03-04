@@ -9,22 +9,12 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
+# Assignment 3: Data Visualization
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+## Introduction and Summary
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+In this assignment, I intend to analyze existing data on incarceration in the United States provided by the Vera Institute. In particular, I will be focusing on the general population of the United States, population of incarcerated individuals in jails, disaggregated racial and ethnic groups incarcerated in jails, and finally total jail admission within a year.
 
-```{r cars}
-summary(cars)
-```
+This data visualization will provide insight into the rise of carceral practices by looking over certain variables such as jail population and total population over time. For example, the year with the highest total jail population in the United States was **1993**, while the highest total general population was **2016**. Although both populations have a positive trend, this may demonstrate the rise in incarcerated individuals in jails are not associated with the rise of the general population in the United States. In addition, due to the racialized nature of incarceration in the United States, marginalized communities such as BIPOC communities are hyper-policed and disproportionately impacted by criminal (in)justice system in the United States. This data visualization will break down the data by racial and ethnic groups in order to better visualize the inequitable impact of hyper-policing. In 1985, the Black population
 
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+This data will break down the population of various racial and ethnic groups collected by the Vera Institute in order to better visualize the inequitable impact of hyper-policing. In addition, this data will provide insight into the rise of carceral practices by looking over certain variables such as jail population over time.
