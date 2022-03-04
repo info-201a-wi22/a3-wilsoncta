@@ -7,70 +7,31 @@ library(dplyr)
 library(tidyr)
 library(ggplot2)
 
-black_before_pop <- race %>% 
-  filter(year == 1985) %>% 
-  pull(black)
-black_before_pop
+year_max_jail_pop <- incarceration %>% #What year had the highest total jail population
+  filter(total_jail_pop == max(incarceration$total_jail_pop, na.rm = TRUE)) %>% 
+  pull(year)
 
-black_after_pop <- race %>% 
-  filter(year == 2018) %>% 
-  pull(black)
-black_after_pop
+year_max_pop <- incarceration %>% #What year had the highest total jail population
+  filter(total_pop == max(incarceration$total_pop, na.rm = TRUE)) %>% 
+  pull(year)
 
-black_comp <- black_after_pop / black_before_pop
-black_comp
+total_jail_pop <- incarceration %>%
+  group_by(year) %>%
+  summarise(avg = mean(total_jail_pop, na.rm = TRUE))
 
-white_before_pop <- race %>% 
-  filter(year == 1985) %>% 
-  pull(aapi)
-white_before_pop
+total_pop <- incarceration %>%
+  group_by(year) %>%
+  summarise(pop_avg = mean(total_pop, na.rm = TRUE)) #How to make this into its own line?
 
-white_after_pop <- race %>% 
-  filter(year == 2018) %>% 
-  pull(aapi)
-white_after_pop
+comparison <- left_join(total_jail_pop, total_pop)
+View(comparison)
 
-white_comp <- white_after_pop / white_before_pop
-white_comp
-
-avg_aapi <- incarceration %>% 
-  group_by(year) %>% 
-  summarise(aapi = sum(aapi_jail_pop, na.rm = TRUE))
-  
-avg_black <- incarceration %>% 
-  group_by(year) %>% 
-  summarise(black = sum(black_jail_pop, na.rm = TRUE))
-
-avg_latinx <- incarceration %>% 
-  group_by(year) %>% 
-  summarise(latinx = sum(latinx_jail_pop, na.rm = TRUE))
-
-avg_native <- incarceration %>% 
-  group_by(year) %>% 
-  summarise(native = sum(native_jail_pop, na.rm = TRUE))
-
-avg_white <- incarceration %>% 
-  group_by(year) %>% 
-  summarise(white = sum(white_jail_pop, na.rm = TRUE))
-
-race <- avg_aapi %>%
-  left_join(avg_black, by = "year") %>% 
-  left_join(avg_latinx, by = "year") %>% 
-  left_join(avg_native, by = "year") %>% 
-  left_join(avg_white, by = "year") %>% 
-  tail(34)
-View(race)
-
-race_comp <- race %>% 
-  ggplot(aes (x = year)) +
-  geom_line(aes(y = aapi, color = "AAPI")) +
-  geom_line(aes(y = black, color = "Black")) +
-  geom_line(aes(y = latinx, color = "Latinx")) +
-  geom_line(aes(y = native, color = "Native American")) +
-  geom_line(aes(y = white, color = "White")) +
-  scale_x_continuous() +
+comp_plot <- comparison %>% 
+  ggplot() +
+  geom_line(mapping = aes(x = year, y = avg, color = "Jail Population")) +
+  geom_line(mapping = aes(x = year, y = pop_avg, color = "General US Population")) +
   labs(x = "Year",
        y = "Population",
-       title = "Jail Population by Race in the US Over Time",
-       color = "Race")
-race_comp
+       title = "General Population and Jail Population in the US Over Time",
+       color = "Average Total Population")
+comp_plot

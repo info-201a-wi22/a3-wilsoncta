@@ -1,4 +1,4 @@
-setwd("c:/Users/ohhay/OneDrive/Documents/INFO201/a3-wilsoncta/source")
+setwd("~/INFO_201/a3-wilsoncta/source")
 
 incarceration <- read.csv("https://raw.githubusercontent.com/vera-institute/incarceration-trends/master/incarceration_trends.csv")
 View(incarceration)
@@ -45,16 +45,16 @@ county <- map_data("county") %>%
   unite(polyname, region, subregion, sep = ",") %>%
   left_join(county.fips, by = "polyname")
 
-map <- county %>%
+usa <- county %>%
   left_join(jail_adm, by = "fips")
-View(map)
+View(usa)
 
-test <- map %>% 
+map <- usa %>% 
   ggplot(mapping = aes(x = long, y = lat, group = group)) +
-  geom_polygon(aes(fill = map$total_jail_adm)) + 
+  geom_polygon(aes(fill = usa$total_jail_adm)) + 
   coord_quickmap() + 
-  scale_fill_continuous(limits= c(0, max(map$total_jail_adm)))+
+  scale_fill_continuous(limits= c(0, max(usa$total_jail_adm)))+
   blank_theme +
-  labs(title = "Jail Admissions in the United States by County in 2018", fill = "total_jail_pop",
+  labs(title = "Jail Admission in the United States by County in 2018", fill = "total_jail_pop",
        total_jail_adm = "Total Jail Population") #How to change legend title
-test
+map

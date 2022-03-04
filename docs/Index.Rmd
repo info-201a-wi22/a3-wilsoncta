@@ -15,6 +15,50 @@ knitr::opts_chunk$set(echo = TRUE)
 
 In this assignment, I intend to analyze existing data on incarceration in the United States provided by the Vera Institute. In particular, I will be focusing on the general population of the United States, population of incarcerated individuals in jails, disaggregated racial and ethnic groups incarcerated in jails, and finally total jail admission within a year.
 
-This data visualization will provide insight into the rise of carceral practices by looking over certain variables such as jail population and total population over time. For example, the year with the highest total jail population in the United States was **1993**, while the highest total general population was **2016**. Although both populations have a positive trend, this may demonstrate the rise in incarcerated individuals in jails are not associated with the rise of the general population in the United States. In addition, due to the racialized nature of incarceration in the United States, marginalized communities such as BIPOC communities are hyper-policed and disproportionately impacted by criminal (in)justice system in the United States. This data visualization will break down the data by racial and ethnic groups in order to better visualize the inequitable impact of hyper-policing. In 1985, the Black population
+Due to the racialized nature of incarceration in the United States, marginalized communities such as BIPOC communities are hyper-policed and disproportionately impacted by criminal (in)justice system in the United States. This data visualization will analyze this trend over time and break down the data by racial and ethnic groups in order to better visualize the inequitable impact of hyper-policing. In 1985, the Black population incarcerated in jails was **86,947**. While in 2018, the population was **247,547**. The Black population in jail in 2018 was **2.84** times bigger than the population in 1985.
 
-This data will break down the population of various racial and ethnic groups collected by the Vera Institute in order to better visualize the inequitable impact of hyper-policing. In addition, this data will provide insight into the rise of carceral practices by looking over certain variables such as jail population over time.
+In addition, this data visualization will provide insight into the rise of carceral practices by comparing variables such as jail population and total population over time. For example, the year with the highest total jail population in the United States was **1993**, while the highest total general population was **2016**.
+
+Lastly, this data visualization will look at trends of incarceration throughout the United States. I specifically will visualize the admission rate to jails throughout the United States by counties in 2018. For example, the county with the highest admission rate to jails was **Dickens County**.
+
+## Trends Over Time
+
+```{r chart 1, echo=FALSE, message=FALSE, warning=FALSE}
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+source("../source/chart_1.R")
+race_comp
+```
+
+For this chart, I chose to visualize the population of incarcerated individuals in jails throughout time. This chart would allow us to better understand the rise of carceral institutions and practices. In addition, to better illustrate the inequitable impact of the criminal justice systems and carcarel institutions such as jails, I chose to use the disaggregated data of jail population by race and ethnicity. Although dominant narratives of carcral institutions depict them as institutions to punish or rehabilitate "criminals", BIPOC communities, particularly Black communities, are disproportionatly impacted by these institutions.
+
+For this chart, I chose to start at 1985 since there was no data on jail population prior to this year. Since 1985 there was been a steady increase among AAPI and Native Americans in jails. However, there were significant increases among the jail population of white, Black, and Latinx populations. It is important to note the data provided by the Vera Institute does not disaggregate data between Asians and Native Hawaiians/Pacific Islanders which may consequently conceal additional inequities.
+
+## Variable Comparison
+
+```{r charts 2,echo=FALSE, warning=FALSE, message=FALSE}
+source("../source/chart_2.R")
+comp_plot
+```
+
+For this chart, I wanted to see the association between the average jail population per year to the average general population of the United States since 1970. According to the data, both the average jail population and general population has been increasing. However, this would allow audiences to understand whether the rise in incarcerated individuals in jails is associated with the rise of the general population. Although both populations have been trending upwards, the year with the highest average jail population was in **1993**, while the year with the highest average general population was **2016**. This may demonstrate the rise in incarcerated individuals in jails are not associated with the rise of the general population in the United States. Instead, this may point to the rise of carceral institution and practices.
+
+## Map
+
+```{r charts 3,echo=FALSE, warning=FALSE, message=FALSE}
+library(shiny)
+library(stringr)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(leaflet)
+library(tidyverse)
+library(maps)
+library(usmap)
+library(mapproj)
+source('../source/chart_3.R')
+map
+```
+
+In order to build of the knowledge gained by the two previous charts, I wanted to visualize the total jail admissions throughout the United States by county in 2018. I chose 2018 for this chart since it is the most recent year collected by the Vera Institute. Total jail admissions would reveal whether there is an increase of jail admissions in a given county. In addition, I chose to analyze county data since this would provide more an accurate portrayal of jail admission rates compared to state data. This chart reveals there is a disproportionate amount of total jail admissions in the Southwest United States. In particular, the county with the largest total jail admission is **Los Angeles County**.
